@@ -7,6 +7,14 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 const VIDEO_URL = "/video_scrub.mp4";
 
 // ==========================================
+// DETECCIÓN DE DISPOSITIVO MÓVIL
+// ==========================================
+const isMobileDevice = (): boolean => {
+  if (typeof window === 'undefined') return false;
+  return /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+};
+
+// ==========================================
 // CONSTANTES DE OPTIMIZACIÓN VIDEO SCRUBBING
 // ==========================================
 const MIN_SEEK_INTERVAL = 33;    // ~30fps throttle (evita sobrecargar decoder)
@@ -16,6 +24,7 @@ const FAST_SMOOTH = 0.25;        // Factor rápido para diferencias grandes
 const SETTLING_SMOOTH = 0.08;    // Factor suave cuando está cerca del objetivo
 
 const Hero: React.FC = () => {
+  const [isMobile, setIsMobile] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
   const stickyRef = useRef<HTMLDivElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -28,10 +37,28 @@ const Hero: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [loadingProgress, setLoadingProgress] = useState(0);
 
-  // 1. Cargar video como BLOB para acceso instantáneo a memoria (Zero Latency)
+  // 0. Detectar dispositivo móvil al montar
+  useEffect(() => {
+    setIsMobile(isMobileDevice());
+  }, []);
+
+  // 1. Cargar video - BLOB para desktop, URL directa para móvil
   useEffect(() => {
     let objectUrl: string | null = null;
+
     const loadVideo = async () => {
+      // ==========================================
+      // MÓVIL: Usar URL directa (blob no funciona bien en iOS)
+      // ==========================================
+      if (isMobileDevice()) {
+        setVideoSrc(VIDEO_URL);
+        setIsLoading(false);
+        return;
+      }
+
+      // ==========================================
+      // DESKTOP: Cargar como BLOB para scroll scrubbing óptimo
+      // ==========================================
       try {
         const response = await fetch(VIDEO_URL);
         const reader = response.body?.getReader();
@@ -62,23 +89,62 @@ const Hero: React.FC = () => {
         setIsLoading(false);
       }
     };
+
     loadVideo();
     return () => { if (objectUrl) URL.revokeObjectURL(objectUrl); };
   }, []);
 
-  // 2. Lógica de "Smart Scrubbing" OPTIMIZADA - Sistema de interpolación mejorado
+  // 2. Lógica de "Smart Scrubbing" OPTIMIZADA - Solo para DESKTOP
   useEffect(() => {
     if (!videoSrc || isLoading) return;
 
     gsap.registerPlugin(ScrollTrigger);
+
+    const video = videoRef.current;
+    const mobile = isMobileDevice();
+
+    // ==========================================
+    // MÓVIL: Solo reproducir video en loop, sin scroll scrubbing
+    // ==========================================
+    if (mobile && video) {
+      video.play().catch(() => {
+        // Autoplay puede fallar, pero el atributo autoPlay lo intentará
+        console.log("Autoplay prevented, waiting for user interaction");
+      });
+    }
+
+    // ==========================================
+    // DESKTOP: Scroll scrubbing completo
+    // ==========================================
+    if (mobile) {
+      // En móvil solo configuramos las animaciones del header, no el scroll scrubbing del video
+      // (El video se reproduce en loop automáticamente)
+
+      // Animación de ENTRADA del Header
+      const entranceTl = gsap.timeline({ delay: 0.3 });
+      gsap.set([taglineRef.current, lineRef.current, subtitleRef.current], {
+        opacity: 0,
+        y: 60,
+      });
+      gsap.set(lineRef.current, { scaleX: 0 });
+
+      entranceTl
+        .to(taglineRef.current, { opacity: 1, y: 0, duration: 1.2, ease: "power3.out" })
+        .to(lineRef.current, { opacity: 1, y: 0, scaleX: 1, duration: 0.8, ease: "power2.inOut" }, "-=0.6")
+        .to(subtitleRef.current, { opacity: 1, y: 0, duration: 1, ease: "power3.out" }, "-=0.4");
+
+      return () => {
+        entranceTl.kill();
+      };
+    }
+
+    // --- DESKTOP SCROLL SCRUBBING ---
 
     // Estado del scrubbing
     let targetTime = 0;
     let currentTime = 0;
     let lastSeekTime = 0;
     let rafId: number | null = null;
-
-    const video = videoRef.current;
 
     if (video) {
       video.currentTime = 0;
@@ -275,11 +341,13 @@ const Hero: React.FC = () => {
               src={videoSrc}
               muted
               playsInline
-              preload="auto" // Importante: Auto carga
+              preload="auto"
+              autoPlay={isMobile}  // Solo en móvil: autoplay
+              loop={isMobile}       // Solo en móvil: loop infinito
               className="absolute inset-0 w-full h-full object-cover"
               style={{
                 objectFit: 'cover',
-                willChange: 'transform' // Optimización de GPU
+                willChange: 'transform'
               }}
             />
           )}
