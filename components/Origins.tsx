@@ -171,7 +171,7 @@ const Origins: React.FC<OriginsProps> = ({ products }) => {
               backgroundClip: 'text',
             }}
           >
-            Selección Exclusiva
+            Café & Cacao Peruano
           </span>
 
           <h2
@@ -193,8 +193,8 @@ const Origins: React.FC<OriginsProps> = ({ products }) => {
           />
 
           <p className="text-coffee-300 text-lg max-w-2xl mx-auto leading-relaxed">
-            Cada grano cuenta una historia de origen, clima y manos trabajadoras.
-            Seleccionamos solo el 1% superior de la cosecha mundial.
+            Cada grano cuenta la historia de su tierra y su gente.
+            De las alturas de Cusco, Junín y Amazonas, directo a tu taza.
           </p>
         </div>
 

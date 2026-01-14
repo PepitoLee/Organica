@@ -1,5 +1,4 @@
 import React, { useRef, useState, useEffect } from 'react';
-import { Loader2 } from 'lucide-react';
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
@@ -34,8 +33,7 @@ const Hero: React.FC = () => {
   const subtitleRef = useRef<HTMLSpanElement>(null);
 
   const [videoSrc, setVideoSrc] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const [loadingProgress, setLoadingProgress] = useState(0);
+  const [videoReady, setVideoReady] = useState(false);
 
   // 0. Detectar dispositivo móvil al montar
   useEffect(() => {
@@ -52,7 +50,7 @@ const Hero: React.FC = () => {
       // ==========================================
       if (isMobileDevice()) {
         setVideoSrc(VIDEO_URL);
-        setIsLoading(false);
+        setVideoReady(true);
         return;
       }
 
@@ -61,32 +59,14 @@ const Hero: React.FC = () => {
       // ==========================================
       try {
         const response = await fetch(VIDEO_URL);
-        const reader = response.body?.getReader();
-        const contentLength = +response.headers.get('Content-Length')!;
-        let receivedLength = 0;
-        const chunks = [];
-
-        if (reader) {
-          while (true) {
-            const { done, value } = await reader.read();
-            if (done) break;
-            chunks.push(value);
-            receivedLength += value.length;
-            if (contentLength) setLoadingProgress(Math.round((receivedLength / contentLength) * 100));
-          }
-          const blob = new Blob(chunks, { type: 'video/mp4' });
-          objectUrl = URL.createObjectURL(blob);
-          setVideoSrc(objectUrl);
-        } else {
-          const blob = await response.blob();
-          objectUrl = URL.createObjectURL(blob);
-          setVideoSrc(objectUrl);
-        }
+        const blob = await response.blob();
+        objectUrl = URL.createObjectURL(blob);
+        setVideoSrc(objectUrl);
       } catch (error) {
         console.error("Error loading blob", error);
         setVideoSrc(VIDEO_URL);
       } finally {
-        setIsLoading(false);
+        setVideoReady(true);
       }
     };
 
@@ -96,7 +76,7 @@ const Hero: React.FC = () => {
 
   // 2. Lógica de "Smart Scrubbing" OPTIMIZADA - Solo para DESKTOP
   useEffect(() => {
-    if (!videoSrc || isLoading) return;
+    if (!videoSrc || !videoReady) return;
 
     gsap.registerPlugin(ScrollTrigger);
 
@@ -307,7 +287,7 @@ const Hero: React.FC = () => {
       entranceTl.kill();
       scrollTl.kill();
     };
-  }, [videoSrc, isLoading]);
+  }, [videoSrc, videoReady]);
 
   return (
     // Reducido a 400vh para un recorrido más fluido y responsivo
@@ -315,23 +295,6 @@ const Hero: React.FC = () => {
 
       {/* Viewport Pegajoso (Sticky) */}
       <div ref={stickyRef} className="sticky top-0 left-0 w-full h-screen overflow-hidden">
-
-        {/* Loading Overlay */}
-        {isLoading && (
-          <div className="absolute inset-0 z-50 flex flex-col items-center justify-center bg-coffee-950 text-coffee-50">
-            <Loader2 className="w-12 h-12 mb-4 text-gold-500 animate-spin" />
-            <div className="flex flex-col items-center gap-2">
-              <p className="font-serif text-xl tracking-widest uppercase">Cargando Experiencia</p>
-              <span className="font-mono text-xs text-gold-500">{loadingProgress}%</span>
-            </div>
-            <div className="w-64 h-0.5 bg-coffee-900 mt-4 rounded-full overflow-hidden">
-              <div
-                className="h-full bg-gold-500 transition-all duration-300 ease-out"
-                style={{ width: `${loadingProgress}%` }}
-              />
-            </div>
-          </div>
-        )}
 
         {/* Video Layer */}
         <div className="absolute inset-0 w-full h-full">
@@ -361,11 +324,10 @@ const Hero: React.FC = () => {
         </div>
 
         {/* Header Content - Tagline superior con efectos cinematográficos */}
-        {!isLoading && (
-          <div
-            ref={headerRef}
-            className="absolute top-0 left-0 right-0 z-10 pt-28 md:pt-32 flex flex-col items-center text-center pointer-events-none"
-          >
+        <div
+          ref={headerRef}
+          className="absolute top-0 left-0 right-0 z-10 pt-28 md:pt-32 flex flex-col items-center text-center pointer-events-none"
+        >
             {/* Tagline principal - Efectos de color y brillo */}
             <h2
               ref={taglineRef}
@@ -406,18 +368,15 @@ const Hero: React.FC = () => {
             >
               Cacao & Café de Origen
             </span>
-          </div>
-        )}
+        </div>
 
         {/* Scroll Indicator */}
-        {!isLoading && (
-          <div className="absolute bottom-12 left-1/2 -translate-x-1/2 z-20 flex flex-col items-center gap-3 mix-blend-difference">
-            <span className="text-[9px] uppercase tracking-[0.4em] text-white/70 animate-pulse">
-              Explorar
-            </span>
-            <div className="h-12 w-[1px] bg-gradient-to-b from-transparent via-gold-500 to-transparent animate-pulse"></div>
-          </div>
-        )}
+        <div className="absolute bottom-12 left-1/2 -translate-x-1/2 z-20 flex flex-col items-center gap-3 mix-blend-difference">
+          <span className="text-[9px] uppercase tracking-[0.4em] text-white/70 animate-pulse">
+            Explorar
+          </span>
+          <div className="h-12 w-[1px] bg-gradient-to-b from-transparent via-gold-500 to-transparent animate-pulse"></div>
+        </div>
       </div>
     </div>
   );

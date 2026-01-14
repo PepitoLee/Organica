@@ -6,10 +6,10 @@ import { Coffee, Check, Sparkles, Gift, Truck } from 'lucide-react';
 gsap.registerPlugin(ScrollTrigger);
 
 const BENEFITS = [
-  { icon: Sparkles, text: 'Acceso anticipado a ediciones limitadas' },
-  { icon: Gift, text: 'Descuentos exclusivos para miembros' },
-  { icon: Truck, text: 'Envío gratuito en tu primer pedido' },
-  { icon: Coffee, text: 'Guías de preparación personalizadas' },
+  { icon: Coffee, text: 'Historias de nuestros productores' },
+  { icon: Sparkles, text: 'Recetas y tips de preparación' },
+  { icon: Gift, text: 'Acceso a ediciones limitadas' },
+  { icon: Truck, text: 'Impacto social de tu compra' },
 ];
 
 const Newsletter: React.FC = () => {
@@ -195,7 +195,7 @@ const Newsletter: React.FC = () => {
                   backgroundClip: 'text',
                 }}
               >
-                Club Exclusivo
+                Nuestra Comunidad
               </span>
 
               <h2
@@ -204,12 +204,12 @@ const Newsletter: React.FC = () => {
                   color: 'rgba(255, 248, 240, 0.95)',
                 }}
               >
-                Únete a Orgánica
+                Únete a la Comunidad Orgánica
               </h2>
 
               <p className="text-coffee-300 max-w-md mx-auto">
-                Suscríbete para recibir granos exclusivos, guías de preparación
-                y acceso anticipado a nuestras ediciones limitadas.
+                Recibe historias de origen, recetas y novedades sobre el impacto
+                de tu compra en las comunidades productoras.
               </p>
             </div>
 

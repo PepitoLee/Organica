@@ -1,4 +1,5 @@
 import React, { useRef, useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
@@ -6,16 +7,15 @@ gsap.registerPlugin(ScrollTrigger);
 
 const FOOTER_LINKS = {
   explorar: [
-    { label: 'Orígenes', href: '#' },
-    { label: 'Historia', href: '#' },
-    { label: 'Tienda', href: '#' },
-    { label: 'Wholesale', href: '#' },
+    { label: 'Productos', to: '/productos' },
+    { label: 'Historia', to: '/historia' },
+    { label: 'Inclusión', to: '/inclusion' },
   ],
   contacto: [
-    { label: 'Instagram', href: '#' },
-    { label: 'Twitter', href: '#' },
-    { label: 'Facebook', href: '#' },
-    { label: 'Email', href: 'mailto:hola@organica.coffee' },
+    { label: 'Instagram', href: 'https://instagram.com/organica.pe', external: true },
+    { label: 'WhatsApp', href: 'https://wa.me/51947397984', external: true },
+    { label: 'Facebook', href: 'https://facebook.com/organica.pe', external: true },
+    { label: 'Email', href: 'mailto:hola@organica.pe', external: true },
   ],
 };
 
@@ -163,8 +163,8 @@ const Footer: React.FC = () => {
             </div>
 
             <p className="text-coffee-400 text-sm leading-relaxed max-w-xs mb-6">
-              Cacao & Café de Origen. Seleccionamos los mejores granos del mundo,
-              respetando la tierra y las comunidades que los cultivan.
+              Café y cacao peruano de origen. Trabajamos con comunidades productoras
+              e integramos a personas con discapacidad en nuestra cadena de valor.
             </p>
 
             <div className="flex items-center gap-1 text-coffee-500 text-sm">
@@ -179,7 +179,7 @@ const Footer: React.FC = () => {
               >
                 {heartHovered ? '☕' : '♥'}
               </button>
-              <span>en Ecuador</span>
+              <span>en Lima, Perú</span>
             </div>
           </div>
 
@@ -195,8 +195,8 @@ const Footer: React.FC = () => {
             <ul className="space-y-3">
               {FOOTER_LINKS.explorar.map((link) => (
                 <li key={link.label}>
-                  <a
-                    href={link.href}
+                  <Link
+                    to={link.to}
                     className="relative inline-block text-coffee-400 hover:text-coffee-50 transition-colors duration-300 text-sm"
                     onMouseEnter={(e) => handleLinkHover(e, true)}
                     onMouseLeave={(e) => handleLinkHover(e, false)}
@@ -208,7 +208,7 @@ const Footer: React.FC = () => {
                         background: 'linear-gradient(90deg, rgba(212, 175, 55, 0.8), transparent)',
                       }}
                     />
-                  </a>
+                  </Link>
                 </li>
               ))}
             </ul>
@@ -289,7 +289,7 @@ const Footer: React.FC = () => {
           className="pt-8 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-4"
         >
           <p className="text-coffee-600 text-xs">
-            © 2024 Orgánica Cacao & Café. Todos los derechos reservados.
+            © 2025 Orgánica Café & Cacao Peruano. Todos los derechos reservados.
           </p>
 
           <div className="flex gap-6 text-coffee-600 text-xs">
