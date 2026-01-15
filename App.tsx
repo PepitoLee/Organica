@@ -11,14 +11,14 @@ function App() {
   return (
     <CartProvider>
       <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Layout />}>
-            <Route index element={<HomePage />} />
-            <Route path="productos" element={<ProductsPage />} />
-            <Route path="historia" element={<HistoriaPage />} />
-            <Route path="inclusion" element={<InclusionPage />} />
-          </Route>
-        </Routes>
+      <Routes>
+        <Route path="/" element={<Layout />}>
+          <Route index element={<HomePage />} />
+          <Route path="productos" element={<ProductsPage />} />
+          <Route path="historia" element={<HistoriaPage />} />
+          <Route path="inclusion" element={<InclusionPage />} />
+        </Route>
+      </Routes>
       </BrowserRouter>
     </CartProvider>
   );

@@ -29,7 +29,7 @@ const Navbar: React.FC = () => {
     <>
       <motion.nav
         className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-          scrolled ? 'py-4 bg-coffee-950/80 backdrop-blur-md border-b border-white/5' : 'py-8 bg-transparent'
+          scrolled ? 'py-1 bg-coffee-950/90 backdrop-blur-md border-b border-white/5' : 'py-4 bg-transparent'
         }`}
         initial={{ y: -100 }}
         animate={{ y: 0 }}
@@ -38,7 +38,7 @@ const Navbar: React.FC = () => {
         <div className="container mx-auto px-6 flex justify-between items-center">
           {/* Logo */}
           <NavLink to="/" className="flex items-center">
-            <img src="/logo.png" alt="Orgánica" className="h-16 md:h-20 lg:h-24 w-auto" />
+            <img src="/logo.png" alt="Orgánica" className="h-[120px] md:h-32 lg:h-36 w-auto" />
           </NavLink>
 
           {/* Desktop Navigation */}
@@ -65,7 +65,7 @@ const Navbar: React.FC = () => {
               onClick={toggleCart}
               className="relative group flex items-center gap-3"
             >
-              <span className="hidden md:block font-sans text-xs uppercase tracking-widest group-hover:text-gold-500 transition-colors">
+              <span className="hidden md:block font-sans text-xs uppercase tracking-widest text-coffee-200 group-hover:text-gold-500 transition-colors">
                 Cesta
               </span>
               <div className="relative p-2 rounded-full border border-white/10 group-hover:border-gold-500/50 transition-colors">

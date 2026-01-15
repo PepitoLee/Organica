@@ -13,17 +13,21 @@ const CartSidebar: React.FC = () => {
   const generateWhatsAppMessage = () => {
     if (items.length === 0) return '';
 
-    let message = '¡Hola! Me gustaría hacer el siguiente pedido:\n\n';
+    let message = '¡Hola! ☕🌿\n';
+    message += 'Gracias por tu pedido y por elegir café orgánico de origen peruano.\n\n';
+    message += 'Hemos recibido tu solicitud:\n\n';
 
     items.forEach((item) => {
       message += `☕ *${item.name}*\n`;
-      message += `   Cantidad: ${item.quantity}\n`;
-      message += `   Precio: S/ ${(item.price * item.quantity).toFixed(2)}\n\n`;
+      message += `Cantidad: ${item.quantity}\n`;
+      message += `Precio: S/ ${(item.price * item.quantity).toFixed(2)}\n\n`;
     });
 
     message += `━━━━━━━━━━━━━━━\n`;
     message += `*TOTAL: S/ ${total.toFixed(2)}*\n\n`;
-    message += `¡Gracias! 🙏`;
+    message += `Tu compra ya es parte del origen y de una comunidad que valora la tierra, las personas y las historias que hay detrás de cada grano.\n\n`;
+    message += `En breve te escribimos para coordinar la entrega 🤍\n\n`;
+    message += `¡Gracias por ser parte! 🌱`;
 
     return encodeURIComponent(message);
   };
