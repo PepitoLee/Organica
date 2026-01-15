@@ -604,9 +604,9 @@ const Story: React.FC = () => {
 
                   <p>
                     Mi amor por el café no nació en una oficina, sino en las montañas. Después de años
-                    perfeccionando mi arte como barista certificado —incluyendo mi formación en Starbucks
-                    donde aprendí los estándares más exigentes de la industria— entendí que el verdadero
-                    café peruano merecía un escenario propio.
+                    perfeccionando mi arte como barista certificado —con formación en reconocidas cadenas
+                    internacionales donde aprendí los estándares más exigentes de la industria— entendí
+                    que el verdadero café peruano merecía un escenario propio.
                   </p>
 
                   <p>
